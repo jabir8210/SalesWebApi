@@ -6,12 +6,35 @@ jobs:
   automated-api-tests:
     runs-on: windows-latest
     steps:
+      # Tjek kildekoden ud
       - uses: actions/checkout@v4
+
+      # Installer Postman CLI
       - name: Install Postman CLI
         run: |
           powershell.exe -NoProfile -InputFormat None -ExecutionPolicy AllSigned -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://dl-cli.pstmn.io/install/win64.ps1'))"
+
+      # Login til Postman CLI med din API-nøgle (via GitHub Secrets)
       - name: Login to Postman CLI
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
-      - name: Run API tests
+
+      # Kør Postman Collection
+      - name: Run API tests with Postman
         run: |
           postman collection run "${{ github.workspace }}/postman/collections/SalesCollection.json"
+
+      # 🔽 NYT: Installer .NET og kør dine C# tests 🔽
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'  # Skift til din version hvis anderledes
+
+      # Gendan afhængigheder og byg løsningen
+      - name: Restore and Build Solution
+        run: |
+          dotnet restore SalesWebAPI.sln
+          dotnet build SalesWebAPI.sln --configuration Release
+
+      # Kør testprojekt
+      - name: Run Unit Tests
+        run: dotnet test SalesWebAPI.sln --configuration Release --no-build
