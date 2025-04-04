@@ -16,7 +16,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "{{SalesURL}}/Customers",
+					"host": [
+						"{{SalesURL}}"
+					],
+					"path": [
+						"Customers"
+					]
 				}
 			},
 			"response": []
