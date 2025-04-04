@@ -18,7 +18,7 @@ namespace SalesWebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get() // Get all customers
         {
             var items = _repository.GetCustomers();
             return Ok(items);
