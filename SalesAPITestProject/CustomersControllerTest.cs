@@ -13,12 +13,29 @@ namespace SalesAPITestProject
         [TestMethod]
         public void GetCustomers_ShouldReturnLists()
         {
-            //
+            //Arrange
+            var mockRepo = new Mock<ICustomerRepository>();
+            mockRepo.Setup(repo => repo.GetCustomers()).Returns(new List<Customer>());
+            var controller = new CustomersController(mockRepo.Object);
+
+            // Act
+            var result = controller.Get();
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
         }
         [TestMethod]
         public void GetCustomers_When_Called_returnsNull()
         {
-            //
+            // Arrange
+            var mockRepo = new Mock<ICustomerRepository>();
+            mockRepo.Setup(repo => repo.GetCustomers()).Returns((List<Customer>)null);
+            var controller = new CustomersController(mockRepo.Object);
+            // Act
+            var result = controller.Get();
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+
 
         }
 
